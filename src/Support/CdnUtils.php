@@ -10,6 +10,7 @@ class CdnUtils
     public static function asset(string $fileName)
     {
         $cdnBase = config('multitenancy-utils-laravel.cdn');
-        return $cdnBase . Str::start($fileName,'/');
+        $tenantKey = config('multitenancy-utils-laravel.tenant_key');
+        return $cdnBase . "/$tenantKey/assets" . Str::start($fileName,'/');
     }
 }

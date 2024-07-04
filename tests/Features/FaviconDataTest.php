@@ -11,6 +11,7 @@ it('renders browser config XML correctly', function () {
         osx_mask_icon_color: '#ffffff'
     );
 
+    config()->set('multitenancy-utils-laravel.tenant_key', 'albano-card');
     $brandData = BrandData::from(IVR\MultiTenancyUtils\Tests\Support\Utils::getTestBrandData());
 
     $expectedXml = '<?xml version="1.0" encoding="utf-8"?>
@@ -39,6 +40,7 @@ it('renders web manifest correctly', function () {
         osx_mask_icon_color: '#ffffff'
     );
 
+    config()->set('multitenancy-utils-laravel.tenant_key', 'albano-card');
     $brandData = BrandData::from(IVR\MultiTenancyUtils\Tests\Support\Utils::getTestBrandData());
 
     $expectedManifest = [
@@ -72,6 +74,7 @@ it('renders favicon meta tags correctly', function () {
         osx_mask_icon_color: '#ffffff'
     );
 
+    config()->set('multitenancy-utils-laravel.tenant_key', 'albano-card');
     $brandData = BrandData::from(IVR\MultiTenancyUtils\Tests\Support\Utils::getTestBrandData());
 
     $expectedMetaTags = '
