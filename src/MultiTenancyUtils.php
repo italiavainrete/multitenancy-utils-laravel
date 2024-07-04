@@ -12,6 +12,16 @@ class MultiTenancyUtils
        return CdnUtils::asset($fileName);
     }
 
+    static function productImage(string $fileName): string
+    {
+        return CdnUtils::product($fileName);
+    }
+
+    static function shopImage(string $fileName): string
+    {
+        return CdnUtils::shop($fileName);
+    }
+
     static function getBrandData(): ?Data\Brand\BrandData
     {
         $service = new IvrNetworksApiService;
