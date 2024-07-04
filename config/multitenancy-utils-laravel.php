@@ -12,5 +12,6 @@ return [
     'colors' => [
         'lighten_percentage' => env('COLORS_LIGHTEN_PERCENTAGE', 40),
         'darken_percentage' => env('COLORS_DARKENEN_PERCENTAGE', 15),
-    ]
+    ],
+    'cdn' => env('CDN_BASE_URL', 'https://d3vk0yr71svhiq.cloudfront.net/ivr'),
 ];
