@@ -26,8 +26,8 @@ class MultiTenancyUtilsServiceProvider extends PackageServiceProvider
         $package
             ->name('multitenancy-utils-laravel')
             ->hasConfigFile()
-            ->hasViewComponent('styles.branding', Branding::class)
-            ->hasViews('multi-tenancy');
+            ->hasViews('multi-tenancy')
+            ->hasRoute('web');
     }
 
 }
