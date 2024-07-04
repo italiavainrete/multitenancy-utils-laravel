@@ -17,7 +17,7 @@ it('renders browser config XML correctly', function () {
             <browserconfig>
                 <msapplication>
                     <tile>
-                        <square150x150logo src="'.$cdn.'/favicons/'.$brandData->key.'/mstile-150x150.png"/>
+                        <square150x150logo src="'.$cdn.'/'.$brandData->key.'/assets/mstile-150x150.png"/>
                         <TileColor>#ffffff</TileColor>
                     </tile>
                 </msapplication>
@@ -46,12 +46,12 @@ it('renders web manifest correctly', function () {
         "short_name" => "$brandData->key",
         "icons" => [
             [
-                "src" => "$cdn/favicons/$brandData->key/android-chrome-192x192.png",
+                "src" => "$cdn/$brandData->key/assets/android-chrome-192x192.png",
                 "sizes" => "192x192",
                 "type" => "image/png"
             ],
             [
-                "src" => "$cdn/favicons/$brandData->key/android-chrome-512x512.png",
+                "src" => "$cdn/$brandData->key/assets/android-chrome-512x512.png",
                 "sizes" => "512x512",
                 "type" => "image/png"
             ]
@@ -75,17 +75,17 @@ it('renders favicon meta tags correctly', function () {
     $brandData = BrandData::from(IVR\MultiTenancyUtils\Tests\Support\Utils::getTestBrandData());
 
     $expectedMetaTags = '
-        <link rel="shortcut icon" href="'.$cdn.'/favicons/'.$brandData->key.'/favicon.ico">
+        <link rel="shortcut icon" href="'.$cdn.'/'.$brandData->key.'/assets/favicon.ico">
         <link rel="manifest" href="/site.webmanifest">
-        <link rel="apple-touch-icon" sizes="180x180" href="'.$cdn.'/favicons/'.$brandData->key.'/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="'.$cdn.'/favicons/'.$brandData->key.'/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="'.$cdn.'/favicons/'.$brandData->key.'/favicon-16x16.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="'.$cdn.'/'.$brandData->key.'/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="'.$cdn.'/'.$brandData->key.'/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="'.$cdn.'/'.$brandData->key.'/assets/favicon-16x16.png">
 
         <meta name="msapplication-config" content="/browserconfig.xml">
         <meta name="apple-mobile-web-app-title" content="'.$brandData->name.'">
         <meta name="application-name" content="'.$brandData->name.'">
 
-        <link rel="mask-icon" href="'.$cdn.'/favicons/'.$brandData->key.'/safari-pinned-tab.svg" color="#ffffff">
+        <link rel="mask-icon" href="'.$cdn.'/'.$brandData->key.'/assets/safari-pinned-tab.svg" color="#ffffff">
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="theme-color" content="#ffffff">
     ';

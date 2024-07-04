@@ -27,12 +27,12 @@ it('returns the correct web manifest', function () {
         "short_name" => "$brandData->key",
         "icons" => [
             [
-                "src" => "$cdn/favicons/$brandData->key/android-chrome-192x192.png",
+                "src" => "$cdn/$brandData->key/assets/android-chrome-192x192.png",
                 "sizes" => "192x192",
                 "type" => "image/png"
             ],
             [
-                "src" => "$cdn/favicons/$brandData->key/android-chrome-512x512.png",
+                "src" => "$cdn/$brandData->key/assets/android-chrome-512x512.png",
                 "sizes" => "512x512",
                 "type" => "image/png"
             ]
@@ -66,7 +66,7 @@ it('returns the correct browser config XML', function () {
             <browserconfig>
                 <msapplication>
                     <tile>
-                        <square150x150logo src="'.$cdn.'/favicons/'.$brandData->key.'/mstile-150x150.png"/>
+                        <square150x150logo src="'.$cdn.'/'.$brandData->key.'/assets/mstile-150x150.png"/>
                         <TileColor>#ffffff</TileColor>
                     </tile>
                 </msapplication>
