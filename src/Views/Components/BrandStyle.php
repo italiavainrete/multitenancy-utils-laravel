@@ -10,14 +10,8 @@ class BrandStyle extends Component
 {
     public function render(): View
     {
-        $colors = collect(SemanticColor::cases())->map(fn(\UnitEnum $case) => $case->value);
-        $variations = [ 'light', 'dark' ];
-        $lightenPercentage = config('multitenancy-utils-laravel.colors.lighten_percentage');
-        $darkenPercentage = config('multitenancy-utils-laravel.colors.darken_percentage');
 
-        return view(
-            'multi-tenancy::components.brand-style',
-            compact('colors','variations','lightenPercentage','darkenPercentage')
-        );
+
+        return view('multi-tenancy::components.brand-style');
     }
 }
