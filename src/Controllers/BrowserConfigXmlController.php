@@ -9,10 +9,9 @@ class BrowserConfigXmlController extends Controller
 {
     public function __invoke()
     {
-        return response()
-            ->json(
+        return response(
                 MultiTenancyUtils::getBrandData()
-                    ->renderBrowserConfigXml()()
+                    ->renderBrowserConfigXml()
             );
     }
 }
