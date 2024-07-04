@@ -3,14 +3,12 @@
 namespace IVR\MultiTenancyUtils;
 
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\View;
 use IVR\MultiTenancyUtils\Contracts\RetrievesShopsListContract;
 use IVR\MultiTenancyUtils\Contracts\RetrievesTenantBrandContract;
 use IVR\MultiTenancyUtils\Services\IvrNetworksApiService;
-use IVR\MultiTenancyUtils\Views\Branding;
+use IVR\MultiTenancyUtils\Views\Composers\BrandDataComposer;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use IVR\MultiTenancyUtils\Commands\MultiTenancyUtilsCommand;
 
 class MultiTenancyUtilsServiceProvider extends PackageServiceProvider
 {
@@ -29,6 +27,20 @@ class MultiTenancyUtilsServiceProvider extends PackageServiceProvider
             ->hasViews('multi-tenancy')
             ->hasViewComposer('*', BrandDataComposer::class)
             ->hasRoute('web');
+    }
+
+    public function packageRegistered()
+    {
+        $this->app->bind(RetrievesTenantBrandContract::class, IvrNetworksApiService::class);
+        $this->app->bind(RetrievesShopsListContract::class, IvrNetworksApiService::class);
+
+
+        $this->app->singleton(
+            'tenant',
+            fn(Application $app) =>
+            $app->make(RetrievesTenantBrandContract::class)
+                ->getForTenant(config('multitenancy-utils-laravel.tenant_key'))
+        );
     }
 
 }

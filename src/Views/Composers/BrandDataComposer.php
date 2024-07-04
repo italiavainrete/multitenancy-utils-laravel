@@ -2,8 +2,8 @@
 
 namespace IVR\MultiTenancyUtils\Views\Composers;
 
-use IVR\MultiTenancyUtils\Contracts\RetrievesTenantBrandContract;
 use Illuminate\View\View;
+use IVR\MultiTenancyUtils\Contracts\RetrievesTenantBrandContract;
 
 class BrandDataComposer
 {

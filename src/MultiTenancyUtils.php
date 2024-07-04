@@ -2,7 +2,6 @@
 
 namespace IVR\MultiTenancyUtils;
 
-use Illuminate\Support\Str;
 use IVR\MultiTenancyUtils\Services\IvrNetworksApiService;
 use IVR\MultiTenancyUtils\Support\CdnUtils;
 
