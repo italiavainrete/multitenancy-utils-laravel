@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Http;
 use IVR\MultiTenancyUtils\Services\IvrNetworksApiService;
+use IVR\MultiTenancyUtils\Views\Components\BrandStyle;
 use function Pest\Laravel\get;
 use function Pest\Laravel\assertViewIs;
 use function Pest\Laravel\assertViewHas;
@@ -23,7 +24,7 @@ it('populates the branding view with the correct brand data', function () {
     $darkenPercentage = config('multitenancy-utils-laravel.colors.darken_percentage');
 
     // Render the view with the brand data
-    $view = view('multi-tenancy::branding')->render();
+    $view = (new BrandStyle)->render()->render();
 
     // Check that the CSS variables are present in the rendered view
     expect($view)->toContain("--color-primary: #252b3c;")

@@ -7,6 +7,7 @@ use IVR\MultiTenancyUtils\Contracts\RetrievesShopsListContract;
 use IVR\MultiTenancyUtils\Contracts\RetrievesTenantBrandContract;
 use IVR\MultiTenancyUtils\Services\IvrNetworksApiService;
 use IVR\MultiTenancyUtils\Views\Components\BrandLogo;
+use IVR\MultiTenancyUtils\Views\Components\BrandStyle;
 use IVR\MultiTenancyUtils\Views\Composers\BrandDataComposer;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -27,6 +28,7 @@ class MultiTenancyUtilsServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews('multi-tenancy')
             ->hasViewComponent('multi-tenancy',BrandLogo::class)
+            ->hasViewComponent('multi-tenancy',BrandStyle::class)
             ->hasViewComposer('*', BrandDataComposer::class)
             ->hasRoute('web');
     }

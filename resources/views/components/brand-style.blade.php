@@ -1,8 +1,5 @@
 @php
-    $colors = collect(\IVR\MultiTenancyUtils\Enums\SemanticColor::cases())->map(fn(\UnitEnum $case) => $case->value);
-    $variations = [ 'light', 'dark' ];
-    $lightenPercentage = config('multitenancy-utils-laravel.colors.lighten_percentage');
-    $darkenPercentage = config('multitenancy-utils-laravel.colors.darken_percentage');
+
 @endphp
 
 <style>
