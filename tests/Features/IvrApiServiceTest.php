@@ -4,10 +4,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use IVR\MultiTenancyUtils\Data\Brand\BrandData;
 use IVR\MultiTenancyUtils\Services\IvrNetworksApiService;
-use function Pest\Faker\fake;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
-use function Pest\Laravel\get;
 
 beforeEach(function () {
     // Configurazione di default per ogni test, se necessario
@@ -18,10 +14,7 @@ it('retrieves tenant shops and caches the result', function () {
     // Mock delle risposte HTTP
     Http::fake([
         '*/api/networks/*/shops' => Http::response([
-            'data' => [
-                ['name' => 'Shop 1', 'category' => 'Category 1'],
-                ['name' => 'Shop 2', 'category' => 'Category 2'],
-            ]
+            'data' => \IVR\MultiTenancyUtils\Tests\Support\Utils::getTestShopsData()
         ], 200)
     ]);
 
@@ -30,7 +23,8 @@ it('retrieves tenant shops and caches the result', function () {
     $shops = $service->getTenantShops($tenantKey);
 
     expect($shops)->toBeCollection();
-    expect($shops->first()->shop_slug)->toBe('shop-1');
+    expect($shops->first())->toBeInstanceOf(\IVR\MultiTenancyUtils\Data\ShopData::class);
+    expect($shops->first()->shop_slug)->toBe('beauty-hair-top');
 
     // Verifica che i dati siano stati memorizzati nella cache
     expect(Cache::has("shops:$tenantKey"))->toBeTrue();
@@ -40,7 +34,7 @@ it('retrieves tenant brand and caches the result', function () {
     // Mock delle risposte HTTP
     Http::fake([
         '*/api/networks/*/brand' => Http::response([
-            'data' => json_decode(file_get_contents(__DIR__ . '/../json/brand.json'))
+            'data' => \IVR\MultiTenancyUtils\Tests\Support\Utils::getTestBrandData()
         ], 200)
     ]);
 

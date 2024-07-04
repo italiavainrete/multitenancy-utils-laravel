@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use IVR\MultiTenancyUtils\Data\Brand\BrandData;
 use IVR\MultiTenancyUtils\Contracts\RetrievesShopsListContract;
 use IVR\MultiTenancyUtils\Contracts\RetrievesTenantBrandContract;
+use IVR\MultiTenancyUtils\Data\ShopData;
 
 class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTenantBrandContract
 {
@@ -28,12 +29,12 @@ class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTena
 
             $api_response = Http::get("{$this->apiUrl}/api/networks/$tenantKey/shops");
             if ($api_response->successful()) {
-                $response_data = json_decode($api_response->body());
+                $response_data = json_decode($api_response->body())->data;
 
                 $shops = collect($response_data->data)->map(function ($item) {
                     $item->category_key = Str::slug($item->category);
                     $item->shop_slug = Str::slug($item->name);
-                    return $item;
+                    return ShopData::from($item);
                 })->sortBy('shop_slug');
             }
 
