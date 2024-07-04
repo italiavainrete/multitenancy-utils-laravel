@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use IVR\MultiTenancyUtils\Contracts\RetrievesShopsListContract;
 use IVR\MultiTenancyUtils\Contracts\RetrievesTenantBrandContract;
 use IVR\MultiTenancyUtils\Services\IvrNetworksApiService;
+use IVR\MultiTenancyUtils\Views\Components\BrandFavicons;
 use IVR\MultiTenancyUtils\Views\Components\BrandLogo;
 use IVR\MultiTenancyUtils\Views\Components\BrandStyle;
 use IVR\MultiTenancyUtils\Views\Composers\BrandDataComposer;
@@ -29,6 +30,7 @@ class MultiTenancyUtilsServiceProvider extends PackageServiceProvider
             ->hasViews('multi-tenancy')
             ->hasViewComponent('multi-tenancy',BrandLogo::class)
             ->hasViewComponent('multi-tenancy',BrandStyle::class)
+            ->hasViewComponent('multi-tenancy',BrandFavicons::class)
             ->hasViewComposer('*', BrandDataComposer::class)
             ->hasRoute('web');
     }
