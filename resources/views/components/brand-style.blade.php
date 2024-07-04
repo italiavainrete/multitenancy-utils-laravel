@@ -2,6 +2,7 @@
 
 @endphp
 
+<link rel="stylesheet" href="{{ $brand->font->stylesheet }}">
 <style>
     :root {
         --color-primary: {{ $brand->colors->primary() }};
