@@ -25,5 +25,19 @@ class BrandData extends Data
     {
     }
 
+    public function renderWebManifest(): array
+    {
+        return $this->favicon_data->renderWebManifest($this);
+    }
+
+    public function renderBrowserConfigXml(): string
+    {
+        return $this->favicon_data->renderBrowserConfigXml($this);
+    }
+
+    public function renderFaviconMeta(): string
+    {
+        return $this->favicon_data->renderFaviconMetaTags($this);
+    }
 
 }
