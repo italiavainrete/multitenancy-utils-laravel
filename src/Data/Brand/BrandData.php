@@ -2,8 +2,6 @@
 
 namespace IVR\MultiTenancyUtils\Data\Brand;
 
-use Illuminate\Support\Collection;
-use IVR\MultiTenancyUtils\Services\RandomImageProvider;
 use Spatie\LaravelData\Data;
 
 class BrandData extends Data
