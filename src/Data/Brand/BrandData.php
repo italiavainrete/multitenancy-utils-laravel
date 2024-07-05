@@ -20,7 +20,8 @@ class BrandData extends Data
         public CompanyData  $company,
         public array   $backgrounds,
         public array   $domains,
-        public array   $allowed_tenants
+        public array   $allowed_tenants,
+        public string $campaign_id
     )
     {
     }
