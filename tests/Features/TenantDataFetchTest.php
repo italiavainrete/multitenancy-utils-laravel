@@ -58,7 +58,7 @@ it('retrieves tenant brand from domain name', function () {
     Config::set('multitenancy-utils-laravel.domain_discovery.enable', true);
     Http::fake([
         '*networks/brands/find*' => Http::response([
-            'data' => json_decode(file_get_contents(__DIR__. '/../json/brand-velletri.json'))
+            'data' => json_decode(file_get_contents(__DIR__. '/../../src/StaticData/brand-velletri.json'))
         ], 200)
     ]);
     $test_domain = 'www.velletrivainrete.it';

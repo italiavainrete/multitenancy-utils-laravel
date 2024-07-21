@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Http;
 use IVR\MultiTenancyUtils\Services\IvrNetworksApiService;
+use IVR\MultiTenancyUtils\Support\StaticTenantData;
 use IVR\MultiTenancyUtils\Views\Components\BrandStyle;
 use function Pest\Laravel\get;
 use function Pest\Laravel\assertViewIs;
@@ -11,7 +12,7 @@ it('populates the branding view with the correct brand data', function () {
     // Fake response for the brand API
     Http::fake([
         '*/api/networks/*/brand' => Http::response([
-            'data' => json_decode(file_get_contents(__DIR__ . '/../json/brand.json'))
+            'data' => StaticTenantData::getBrand()
         ], 200)
     ]);
 
