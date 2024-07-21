@@ -22,8 +22,9 @@ class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTena
     }
 
 
-    public function getTenantShops($tenantKey): Collection
+    public function getTenantShops(): Collection
     {
+        $tenantKey = app('tenant')->key;
         return Cache::remember("shops:$tenantKey", config('multitenancy-utils-laravel.cache.ttl'), function () use ($tenantKey) {
             $shops = collect();
 

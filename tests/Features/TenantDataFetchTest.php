@@ -22,14 +22,13 @@ it('retrieves tenant shops and caches the result', function () {
         ], 200)
     ]);
 
-    $tenantKey = 'tenant-key';
     $service = app(RetrievesShopsListContract::class);
-    $shops = $service->getTenantShops($tenantKey);
+    $shops = $service->getTenantShops();
 
     expect($shops)->toBeCollection()
         ->and($shops->first())->toBeInstanceOf(ShopData::class)
         ->and($shops->first()->shop_slug)->toBe('ceramiche-di-deruta')
-        ->and(Cache::has("shops:$tenantKey"))->toBeTrue();
+        ->and(Cache::has("shops:".Tenants::IVR_KEY))->toBeTrue();
 
     // Verifica che i dati siano stati memorizzati nella cache
 });

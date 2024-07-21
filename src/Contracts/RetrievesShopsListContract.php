@@ -7,5 +7,5 @@ use Illuminate\Support\Collection;
 
 interface RetrievesShopsListContract
 {
-    public function getTenantShops($tenantKey): Collection;
+    public function getTenantShops(): Collection;
 }
