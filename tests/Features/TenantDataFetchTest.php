@@ -42,7 +42,7 @@ it('retrieves tenant brand and caches the result', function () {
         ], 200)
     ]);
 
-    $tenantKey = 'tenant-key';
+    $tenantKey = config('multitenancy-utils-laravel.tenant_key');
     $service = app(RetrievesTenantBrandContract::class);
     $brand = $service->getTenantBrand($tenantKey);
 
