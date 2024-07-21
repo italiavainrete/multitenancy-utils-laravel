@@ -6,10 +6,12 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use IVR\MultiTenancyUtils\Constants\BrandDataSource;
 use IVR\MultiTenancyUtils\Contracts\RetrievesShopsListContract;
 use IVR\MultiTenancyUtils\Contracts\RetrievesTenantBrandContract;
 use IVR\MultiTenancyUtils\Data\Brand\BrandData;
 use IVR\MultiTenancyUtils\Data\ShopData;
+use IVR\MultiTenancyUtils\Support\StaticTenantData;
 
 class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTenantBrandContract
 {
@@ -43,12 +45,44 @@ class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTena
         });
     }
 
-    public function getTenantBrand($tenantKey): ?BrandData
+    public function getTenantBrand(bool $forceDomainDiscovery = false): BrandData
+    {
+        $discoveryByDomain = (
+            config('multitenancy-utils-laravel.domain_discovery.enable')
+                && !app()->runningInConsole()
+            ) || $forceDomainDiscovery;
+
+        if ($discoveryByDomain)
+        {
+            $domain = request()->host();
+            return $this->getTenantBrandByDomain($domain) ?? $this->getTenantBrandByKey(config('multitenancy-utils-laravel.domain_discovery.fallback_tenant'));
+        }
+
+        return $this->getTenantBrandByKey(config('multitenancy-utils-laravel.tenant_key'));
+    }
+
+    public function getTenantBrandByKey(string $tenantKey): BrandData
     {
         return Cache::remember("brand:$tenantKey", config('multitenancy-utils-laravel.cache.ttl'), function () use ($tenantKey) {
             try {
                 $api_response = Http::get("$this->apiUrl/api/networks/$tenantKey/brand");
                 $tenant_data = json_decode($api_response->body())->data;
+                $tenant_data->source = BrandDataSource::SYSTEM;
+                return BrandData::from($tenant_data);
+            } catch (\Exception $exception)
+            {
+                return StaticTenantData::getBrand();
+            }
+        });
+    }
+
+    public function getTenantBrandByDomain(string $domain): ?BrandData
+    {
+        return Cache::remember("brand:$domain", config('multitenancy-utils-laravel.cache.ttl'), function () use ($domain) {
+            try {
+                $api_response = Http::get("$this->apiUrl/networks/brands/find", ['domain' => $domain]);
+                $tenant_data = json_decode($api_response->body())->data;
+                $tenant_data->source = BrandDataSource::DOMAIN;
                 return BrandData::from($tenant_data);
             } catch (\Exception $exception)
             {

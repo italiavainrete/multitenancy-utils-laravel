@@ -2,6 +2,7 @@
 
 namespace IVR\MultiTenancyUtils\Data\Brand;
 
+use IVR\MultiTenancyUtils\Constants\BrandDataSource;
 use Spatie\LaravelData\Data;
 
 class BrandData extends Data
@@ -21,7 +22,8 @@ class BrandData extends Data
         public array   $backgrounds,
         public array   $domains,
         public array   $allowed_tenants,
-        public string $campaign_id
+        public string $campaign_id,
+        public BrandDataSource $source = BrandDataSource::DEFAULT
     )
     {
     }

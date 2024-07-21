@@ -14,4 +14,8 @@ return [
         'darken_percentage' => env('COLORS_DARKENEN_PERCENTAGE', 15),
     ],
     'cdn' => env('CDN_BASE_URL', 'https://d3vk0yr71svhiq.cloudfront.net/ivr'),
+    'domain_discovery' => [
+        'enable' => env('TENANT_DOMAIN_DISCOVERY', false),
+        'fallback_tenant' => \IVR\MultiTenancyUtils\Constants\Tenants::DEFAULT_TENANT_KEY,
+    ],
 ];
