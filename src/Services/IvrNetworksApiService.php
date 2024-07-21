@@ -48,7 +48,6 @@ class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTena
             try {
                 $api_response = Http::get("$this->apiUrl/api/networks/$tenantKey/brand");
                 $tenant_data = json_decode($api_response->body())->data;
-                $tenant_data->key = $tenantKey;
                 return BrandData::from($tenant_data);
             } catch (\Exception $exception)
             {
