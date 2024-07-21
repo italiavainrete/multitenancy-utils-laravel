@@ -7,7 +7,7 @@ use IVR\MultiTenancyUtils\Contracts\RetrievesShopsListContract;
 use IVR\MultiTenancyUtils\Contracts\RetrievesTenantBrandContract;
 use IVR\MultiTenancyUtils\Data\Brand\BrandData;
 use IVR\MultiTenancyUtils\Data\ShopData;
-use IVR\MultiTenancyUtils\Tests\Support\Utils;
+use IVR\MultiTenancyUtils\Support\StaticTenantData;
 
 beforeEach(function () {
     // Configurazione di default per ogni test, se necessario
@@ -18,7 +18,7 @@ it('retrieves tenant shops and caches the result', function () {
     // Mock delle risposte HTTP
     Http::fake([
         '*/api/networks/*/shops' => Http::response([
-            'data' => Utils::getTestShopsData()
+            'data' => StaticTenantData::getShops()
         ], 200)
     ]);
 
@@ -37,7 +37,7 @@ it('retrieves tenant brand and caches the result', function () {
     // Mock delle risposte HTTP
     Http::fake([
         '*/api/networks/*/brand' => Http::response([
-            'data' => Utils::getTestBrandData()
+            'data' => StaticTenantData::getBrand()
         ], 200)
     ]);
 

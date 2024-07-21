@@ -8,7 +8,7 @@ it('renders favicon meta tags correctly', function () {
     $cdn = config('multitenancy-utils-laravel.cdn');
 
     config()->set('multitenancy-utils-laravel.tenant_key', Tenants::IVR_KEY);
-    $brandData = BrandData::from(IVR\MultiTenancyUtils\Tests\Support\Utils::getTestBrandData());
+    $brandData = BrandData::from(\IVR\MultiTenancyUtils\Support\StaticTenantData::getBrand());
 
     $expectedMetaTags = '
         <link rel="shortcut icon" href="'.$cdn.'/'.$brandData->key.'/assets/favicon.ico">

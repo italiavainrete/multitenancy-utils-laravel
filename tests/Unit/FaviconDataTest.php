@@ -1,8 +1,8 @@
 <?php
 
 use IVR\MultiTenancyUtils\Constants\Tenants;
-use IVR\MultiTenancyUtils\Data\Brand\FaviconData;
 use IVR\MultiTenancyUtils\Data\Brand\BrandData;
+use IVR\MultiTenancyUtils\Data\Brand\FaviconData;
 
 it('renders browser config XML correctly', function () {
     $cdn = config('multitenancy-utils-laravel.cdn');
@@ -13,7 +13,7 @@ it('renders browser config XML correctly', function () {
     );
 
     config()->set('multitenancy-utils-laravel.tenant_key', Tenants::IVR_KEY);
-    $brandData = BrandData::from(IVR\MultiTenancyUtils\Tests\Support\Utils::getTestBrandData());
+    $brandData = BrandData::from(\IVR\MultiTenancyUtils\Support\StaticTenantData::getBrand());
 
     $expectedXml = '<?xml version="1.0" encoding="utf-8"?>
             <browserconfig>
@@ -42,7 +42,7 @@ it('renders web manifest correctly', function () {
     );
 
     config()->set('multitenancy-utils-laravel.tenant_key', Tenants::IVR_KEY);
-    $brandData = BrandData::from(IVR\MultiTenancyUtils\Tests\Support\Utils::getTestBrandData());
+    $brandData = BrandData::from(\IVR\MultiTenancyUtils\Support\StaticTenantData::getBrand());
 
     $expectedManifest = [
         "name" => "$brandData->name",
@@ -76,7 +76,7 @@ it('renders favicon meta tags correctly', function () {
     );
 
     config()->set('multitenancy-utils-laravel.tenant_key', Tenants::IVR_KEY);
-    $brandData = BrandData::from(IVR\MultiTenancyUtils\Tests\Support\Utils::getTestBrandData());
+    $brandData = BrandData::from(\IVR\MultiTenancyUtils\Support\StaticTenantData::getBrand());
 
     $expectedMetaTags = '
         <link rel="shortcut icon" href="'.$cdn.'/'.$brandData->key.'/assets/favicon.ico">

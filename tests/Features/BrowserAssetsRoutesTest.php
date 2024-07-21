@@ -3,8 +3,7 @@
 use Illuminate\Support\Facades\Http;
 use IVR\MultiTenancyUtils\Constants\Tenants;
 use IVR\MultiTenancyUtils\Data\Brand\BrandData;
-use IVR\MultiTenancyUtils\MultiTenancyUtils;
-use IVR\MultiTenancyUtils\Tests\Support\Utils;
+use IVR\MultiTenancyUtils\Support\StaticTenantData;
 
 it('returns the correct web manifest', function () {
 
@@ -12,12 +11,12 @@ it('returns the correct web manifest', function () {
     // Faking the HTTP response
     Http::fake([
         '*/api/networks/*/brand' => Http::response([
-            'data' => Utils::getTestBrandData()
+            'data' => StaticTenantData::getBrand()
         ], 200)
     ]);
 
     // Mocking MultiTenancyUtils::getBrandData() to return the test brand data
-    $brandData = BrandData::from(IVR\MultiTenancyUtils\Tests\Support\Utils::getTestBrandData());
+    $brandData = BrandData::from(\IVR\MultiTenancyUtils\Support\StaticTenantData::getBrand());
 
     $response = $this->get(route('web-manifest'));
 
@@ -52,12 +51,12 @@ it('returns the correct browser config XML', function () {
     // Faking the HTTP response
     Http::fake([
         '*/api/networks/*/brand' => Http::response([
-            'data' => Utils::getTestBrandData()
+            'data' => StaticTenantData::getBrand()
         ], 200)
     ]);
 
     // Mocking MultiTenancyUtils::getBrandData() to return the test brand data
-    $brandData = BrandData::from(IVR\MultiTenancyUtils\Tests\Support\Utils::getTestBrandData());
+    $brandData = BrandData::from(\IVR\MultiTenancyUtils\Support\StaticTenantData::getBrand());
 
     $response = $this->get(route('browser-config-xml'));
 
