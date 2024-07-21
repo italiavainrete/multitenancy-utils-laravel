@@ -27,25 +27,25 @@ it('populates the branding view with the correct brand data', function () {
     $view = (new BrandStyle)->render()->render();
 
     // Check that the CSS variables are present in the rendered view
-    expect($view)->toContain("--color-primary: #252b3c;")
+    expect($view)->toContain("--color-primary: #000000;")
         ->and($view)->toContain("--color-primary-light: " . $brand->colors->primary()->lighten($lightenPercentage) . ";")
         ->and($view)->toContain("--color-primary-dark: " . $brand->colors->primary()->darken($darkenPercentage) . ";")
-        ->and($view)->toContain("--color-secondary: #f3714a;")
+        ->and($view)->toContain("--color-secondary: #ff6b28;")
         ->and($view)->toContain("--color-secondary-light: " . $brand->colors->secondary()->lighten($lightenPercentage) . ";")
         ->and($view)->toContain("--color-secondary-dark: " . $brand->colors->secondary()->darken($darkenPercentage) . ";")
-        ->and($view)->toContain("--color-success: #18821f;")
+        ->and($view)->toContain("--color-success: #46a714;")
         ->and($view)->toContain("--color-success-light: " . $brand->colors->success()->lighten($lightenPercentage) . ";")
         ->and($view)->toContain("--color-success-dark: " . $brand->colors->success()->darken($darkenPercentage) . ";")
-        ->and($view)->toContain("--color-info: #007e89;")
+        ->and($view)->toContain("--color-info: #0ebeef;")
         ->and($view)->toContain("--color-info-light: " . $brand->colors->info()->lighten($lightenPercentage) . ";")
         ->and($view)->toContain("--color-info-dark: " . $brand->colors->info()->darken($darkenPercentage) . ";")
-        ->and($view)->toContain("--color-warning: #c48d01;")
+        ->and($view)->toContain("--color-warning: #ffe711;")
         ->and($view)->toContain("--color-warning-light: " . $brand->colors->warning()->lighten($lightenPercentage) . ";")
         ->and($view)->toContain("--color-warning-dark: " . $brand->colors->warning()->darken($darkenPercentage) . ";")
-        ->and($view)->toContain("--color-danger: #8c1546;")
+        ->and($view)->toContain("--color-danger: #ff7038;")
         ->and($view)->toContain("--color-danger-light: " . $brand->colors->danger()->lighten($lightenPercentage) . ";")
         ->and($view)->toContain("--color-danger-dark: " . $brand->colors->danger()->darken($darkenPercentage) . ";")
-        ->and($view)->toContain('font-family: "Poppins", sans-serif !important;');
+        ->and($view)->toContain('font-family: "Nunito", sans-serif !important;');
 
     // Check that the themed font is present
 });

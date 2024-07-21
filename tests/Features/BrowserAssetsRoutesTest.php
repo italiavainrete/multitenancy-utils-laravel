@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Http;
+use IVR\MultiTenancyUtils\Constants\Tenants;
 use IVR\MultiTenancyUtils\Data\Brand\BrandData;
 use IVR\MultiTenancyUtils\MultiTenancyUtils;
 use IVR\MultiTenancyUtils\Tests\Support\Utils;
 
 it('returns the correct web manifest', function () {
 
-    config()->set('multitenancy-utils-laravel.tenant_key', 'albano-card');
+    config()->set('multitenancy-utils-laravel.tenant_key', Tenants::IVR_KEY);
     // Faking the HTTP response
     Http::fake([
         '*/api/networks/*/brand' => Http::response([
@@ -47,7 +48,7 @@ it('returns the correct web manifest', function () {
 });
 
 it('returns the correct browser config XML', function () {
-    config()->set('multitenancy-utils-laravel.tenant_key', 'albano-card');
+    config()->set('multitenancy-utils-laravel.tenant_key', Tenants::IVR_KEY);
     // Faking the HTTP response
     Http::fake([
         '*/api/networks/*/brand' => Http::response([
@@ -67,7 +68,7 @@ it('returns the correct browser config XML', function () {
                 <msapplication>
                     <tile>
                         <square150x150logo src="'.$cdn.'/'.$brandData->key.'/assets/mstile-150x150.png"/>
-                        <TileColor>#ffffff</TileColor>
+                        <TileColor>#00aba9</TileColor>
                     </tile>
                 </msapplication>
             </browserconfig>';

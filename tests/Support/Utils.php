@@ -7,7 +7,7 @@ class Utils
     static function getTestBrandData(): array
     {
         $data = json_decode(file_get_contents(__DIR__ . '/../json/brand.json'), true);
-        $data['key'] = 'albano-card';
+        $data['key'] = 'italia-va-in-rete';
         return $data;
     }
 

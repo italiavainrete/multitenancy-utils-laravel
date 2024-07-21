@@ -1,12 +1,13 @@
 <?php
 
+use IVR\MultiTenancyUtils\Constants\Tenants;
 use IVR\MultiTenancyUtils\Data\Brand\BrandData;
 use IVR\MultiTenancyUtils\Views\Components\BrandFavicons;
 
 it('renders favicon meta tags correctly', function () {
     $cdn = config('multitenancy-utils-laravel.cdn');
 
-    config()->set('multitenancy-utils-laravel.tenant_key', 'albano-card');
+    config()->set('multitenancy-utils-laravel.tenant_key', Tenants::IVR_KEY);
     $brandData = BrandData::from(IVR\MultiTenancyUtils\Tests\Support\Utils::getTestBrandData());
 
     $expectedMetaTags = '
@@ -20,8 +21,8 @@ it('renders favicon meta tags correctly', function () {
         <meta name="apple-mobile-web-app-title" content="'.$brandData->name.'">
         <meta name="application-name" content="'.$brandData->name.'">
 
-        <link rel="mask-icon" href="'.$cdn.'/'.$brandData->key.'/assets/safari-pinned-tab.svg" color="#ffffff">
-        <meta name="msapplication-TileColor" content="#ffffff">
+        <link rel="mask-icon" href="'.$cdn.'/'.$brandData->key.'/assets/safari-pinned-tab.svg" color="#1f2a6b">
+        <meta name="msapplication-TileColor" content="#00aba9">
         <meta name="theme-color" content="#ffffff">
     ';
 
