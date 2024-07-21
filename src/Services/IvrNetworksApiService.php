@@ -47,6 +47,9 @@ class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTena
 
     public function getTenantBrand(bool $forceDomainDiscovery = false): BrandData
     {
+        if (config('multitenancy-utils-laravel.force_static_tenant'))
+            return BrandData::from(StaticTenantData::getBrand());
+
         $discoveryByDomain = (
             config('multitenancy-utils-laravel.domain_discovery.enable')
                 && !app()->runningInConsole()
@@ -71,7 +74,7 @@ class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTena
                 return BrandData::from($tenant_data);
             } catch (\Exception $exception)
             {
-                return StaticTenantData::getBrand();
+                return BrandData::from(StaticTenantData::getBrand());
             }
         });
     }

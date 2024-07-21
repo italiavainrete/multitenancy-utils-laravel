@@ -75,3 +75,16 @@ it('retrieves tenant brand from domain name', function () {
         ->and(Cache::has("brand:$test_domain"))->toBeTrue()
         ->and(app('tenant')->source)->toEqual(BrandDataSource::DOMAIN);
 });
+
+it('will serve static tenant brand config options is set', function () {
+    Config::set('multitenancy-utils-laravel.force_static_tenant', true);
+
+
+    $service = app(RetrievesTenantBrandContract::class);
+    $brand = $service->getTenantBrand();
+
+    expect($brand)->toBeInstanceOf(BrandData::class)
+        ->and($brand->name)->toBe(Tenants::IVR_NAME)
+        ->and(Cache::has("brand:" .Tenants::IVR_KEY))->toBeFalse()
+        ->and(app('tenant')->source)->toEqual(BrandDataSource::DEFAULT);
+});

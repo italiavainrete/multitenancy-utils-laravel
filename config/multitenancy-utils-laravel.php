@@ -18,4 +18,5 @@ return [
         'enable' => env('TENANT_DOMAIN_DISCOVERY', false),
         'fallback_tenant' => \IVR\MultiTenancyUtils\Constants\Tenants::DEFAULT_TENANT_KEY,
     ],
+    'force_static_tenant' => env('TENANT_FORCE_STATIC', false)
 ];
