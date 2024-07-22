@@ -25,6 +25,6 @@ class MultiTenancyUtils
     static function getBrandData(): ?Data\Brand\BrandData
     {
         $service = new IvrNetworksApiService;
-        return $service->getTenantBrand( config('multitenancy-utils-laravel.tenant_key'));
+        return $service->getTenantBrand();
     }
 }

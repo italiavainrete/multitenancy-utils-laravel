@@ -16,9 +16,8 @@ it('populates the branding view with the correct brand data', function () {
         ], 200)
     ]);
 
-    $tenantKey = 'tenant-key';
     $service = new IvrNetworksApiService();
-    $brand = $service->getTenantBrand($tenantKey);
+    $brand = $service->getTenantBrand();
 
     // Define percentages for color variations
     $lightenPercentage = config('multitenancy-utils-laravel.colors.lighten_percentage');

@@ -45,7 +45,7 @@ class MultiTenancyUtilsServiceProvider extends PackageServiceProvider
             'tenant',
             fn(Application $app) =>
             $app->make(RetrievesTenantBrandContract::class)
-                ->getTenantBrand(config('multitenancy-utils-laravel.tenant_key'))
+                ->getTenantBrand()
         );
     }
 

@@ -19,6 +19,6 @@ class BrandDataComposer
      */
     public function compose(View $view): void
     {
-        $view->with('brand', $this->service->getTenantBrand(config('multitenancy-utils-laravel.tenant_key')));
+        $view->with('brand', $this->service->getTenantBrand());
     }
 }
