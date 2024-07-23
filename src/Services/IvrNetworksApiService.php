@@ -83,7 +83,7 @@ class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTena
     {
         return Cache::remember("brand:$domain", config('multitenancy-utils-laravel.cache.ttl'), function () use ($domain) {
             try {
-                $api_response = Http::get("$this->apiUrl/networks/brands/find", ['domain' => $domain]);
+                $api_response = Http::get("$this->apiUrl/api/networks/brands/find", ['domain' => $domain]);
                 $tenant_data = json_decode($api_response->body())->data;
                 $tenant_data->source = BrandDataSource::DOMAIN;
                 return BrandData::from($tenant_data);
