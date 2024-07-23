@@ -2,7 +2,7 @@
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
 
         <div class="flex space-x-8 items-center">
-            <a href="{{ $brand->contacts->main ?? url('/') }}">
+            <a href="{{ $brand->links->main ?? url('/') }}">
                 <x-multi-tenancy::brand-logo :mode="$mode" class="w-32"/>
             </a>
 
