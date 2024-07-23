@@ -11,7 +11,6 @@ class ContactsData extends Data
         public string $support,
          /** @var Collection<int, SocialData> */
         public Collection $social,
-        public string $userarea
     )
     {
     }

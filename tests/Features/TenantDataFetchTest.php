@@ -51,11 +51,12 @@ it('retrieves tenant brand and caches the result', function () {
     expect($brand)->toBeInstanceOf(BrandData::class)
         ->and($brand->name)->toBe(Tenants::IVR_NAME)
         ->and(Cache::has("brand:$tenantKey"))->toBeTrue()
-        ->and(app('tenant')->source)->toEqual(BrandDataSource::SYSTEM);
+        ->and($brand->source)->toEqual(BrandDataSource::SYSTEM);
 });
 
 it('retrieves tenant brand from domain name', function () {
     Config::set('multitenancy-utils-laravel.domain_discovery.enable', true);
+    Config::set('multitenancy-utils-laravel.force_static_tenant', false);
     Http::fake([
         '*networks/brands/find*' => Http::response([
             'data' => json_decode(file_get_contents(__DIR__. '/../../src/StaticData/brand-velletri.json'))
@@ -73,7 +74,7 @@ it('retrieves tenant brand from domain name', function () {
     expect($brand)->toBeInstanceOf(BrandData::class)
         ->and($brand->name)->toBe('Velletri va In Rete')
         ->and(Cache::has("brand:$test_domain"))->toBeTrue()
-        ->and(app('tenant')->source)->toEqual(BrandDataSource::DOMAIN);
+        ->and($brand->source)->toEqual(BrandDataSource::DOMAIN);
 });
 
 it('will serve static tenant brand config options is set', function () {
@@ -86,5 +87,5 @@ it('will serve static tenant brand config options is set', function () {
     expect($brand)->toBeInstanceOf(BrandData::class)
         ->and($brand->name)->toBe(Tenants::IVR_NAME)
         ->and(Cache::has("brand:" .Tenants::IVR_KEY))->toBeFalse()
-        ->and(app('tenant')->source)->toEqual(BrandDataSource::DEFAULT);
+        ->and($brand->source)->toEqual(BrandDataSource::DEFAULT);
 });

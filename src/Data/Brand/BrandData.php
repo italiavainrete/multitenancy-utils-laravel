@@ -11,20 +11,23 @@ class BrandData extends Data
 
 
     public function __construct(
-        public string       $name,
-        public string       $key,
-        public ContactsData $contacts,
-        public LogoData     $logo,
-        public FontData     $font,
-        public ColorData    $colors,
-        public FaviconData  $favicon_data,
-        public CardData     $card,
-        public CompanyData  $company,
-        public array   $backgrounds,
-        public array   $domains,
-        public array   $allowed_tenants,
-        public string $campaign_id,
-        public BrandDataSource $source = BrandDataSource::DEFAULT
+        public string           $name,
+        public string           $key,
+        public string           $city,
+        public NetworkLinksData $links,
+        public ContactsData     $contacts,
+        public LogoData         $logo,
+        public LogoData         $logo_dark,
+        public FontData         $font,
+        public ColorData        $colors,
+        public FaviconData      $favicon_data,
+        public CardData         $card,
+        public CompanyData      $company,
+        public array            $backgrounds,
+        public array            $domains,
+        public array            $allowed_tenants,
+        public string           $campaign_id,
+        public BrandDataSource  $source = BrandDataSource::DEFAULT
     )
     {
     }
