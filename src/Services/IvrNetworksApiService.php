@@ -58,10 +58,17 @@ class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTena
         if ($discoveryByDomain)
         {
             $domain = request()->host();
-            return $this->getTenantBrandByDomain($domain) ?? $this->getTenantBrandByKey(config('multitenancy-utils-laravel.domain_discovery.fallback_tenant'));
+            $tenant_data = $this->getTenantBrandByDomain($domain) ?? $this->getTenantBrandByKey(config('multitenancy-utils-laravel.domain_discovery.fallback_tenant'));
         }
 
-        return $this->getTenantBrandByKey(config('multitenancy-utils-laravel.tenant_key'));
+        $tenant_data = $this->getTenantBrandByKey(config('multitenancy-utils-laravel.tenant_key'));
+
+        if (config('multitenancy-utils-laravel.dev_mode.force_localhost_links')) {
+            $tenant_data->links->main = config('mutitenancy-utils-laravel.dev_mode.links.main');
+            $tenant_data->links->account = config('mutitenancy-utils-laravel.dev_mode.links.account');
+            $tenant_data->links->marketplace = config('mutitenancy-utils-laravel.dev_mode.links.marketplace');
+        }
+        return  $tenant_data;
     }
 
     public function getTenantBrandByKey(string $tenantKey): BrandData

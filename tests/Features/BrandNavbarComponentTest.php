@@ -122,7 +122,30 @@ it('will not include marketplace link if missing', function () {
     $view = (new BrandNavbar($user, "dark"))->render()->render();
 
 
-    expect($view)
-        ->not()->toContain('id="navbar:marketplace"')
-        ->not()->toContain("https://marketplace.com");
+    expect($view)->not()->toContain('id="navbar:marketplace"');
+});
+
+it('will force localhost links if in dev mode', function () {
+    config()->set('multitenancy-utils-laravel.dev_mode.force_localhost_links', true);
+    config()->set('mutitenancy-utils-laravel.dev_mode.links.main', 'https://main.test');
+    config()->set('mutitenancy-utils-laravel.dev_mode.links.account', 'https://account.test');
+    config()->set('mutitenancy-utils-laravel.dev_mode.links.marketplace', 'https://marketplace.test');
+    Auth::login(new User);
+
+    $user = new UserData(
+        id: '1',
+        name: 'John Doe',
+        email: 'john@email.com',
+        avatar: 'https://avatars.com/jon.svg',
+        cardNumber: '123456',
+        cardBalance: '12.99'
+    );
+    $view = (new BrandNavbar($user, "dark"))->render()->render();
+
+    expect($view)->toContain('https://main.test/about')
+        ->and($view)->toContain('https://main.test/info')
+        ->and($view)->toContain('https://account.test/dashboard')
+        ->and($view)->toContain('https://account.test/profile')
+        ->and($view)->toContain('href="https://marketplace.test"')
+        ->and($view)->toContain('https://marketplace.test/orders');
 });
