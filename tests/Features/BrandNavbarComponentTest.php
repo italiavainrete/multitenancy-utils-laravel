@@ -127,9 +127,9 @@ it('will not include marketplace link if missing', function () {
 
 it('will force localhost links if in dev mode', function () {
     config()->set('multitenancy-utils-laravel.dev_mode.force_localhost_links', true);
-    config()->set('mutitenancy-utils-laravel.dev_mode.links.main', 'https://main.test');
-    config()->set('mutitenancy-utils-laravel.dev_mode.links.account', 'https://account.test');
-    config()->set('mutitenancy-utils-laravel.dev_mode.links.marketplace', 'https://marketplace.test');
+    config()->set('multitenancy-utils-laravel.dev_mode.links.main', 'https://main.test');
+    config()->set('multitenancy-utils-laravel.dev_mode.links.account', 'https://account.test');
+    config()->set('multitenancy-utils-laravel.dev_mode.links.marketplace', 'https://marketplace.test');
     Auth::login(new User);
 
     $user = new UserData(
