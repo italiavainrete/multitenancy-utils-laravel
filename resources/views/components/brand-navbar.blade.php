@@ -38,7 +38,7 @@
         @endauth
 
         @guest
-            <a href="{{ $brand->contacts->userarea ?? '' }}" class="ml-4 bg-secondary text-white px-4 py-2 rounded">Accedi
+            <a href="{{ Illuminate\Support\Facades\Route::has('login')  ? route('login') : $brand->links->account . '/login' }}" class="ml-4 bg-secondary text-white px-4 py-2 rounded">Accedi
                 o Iscriviti</a>
         @endguest
 
@@ -61,7 +61,7 @@
         <div class=" flex flex-col px-4 ">
 
             @foreach(collect(\IVR\MultiTenancyUtils\Constants\DefaultPages::HEADER) as $page)
-                <a href="{{ (app('tenant')->contacts->main ?? url('/')) . '/' . $page['slug'] }}"
+                <a href="{{ ($brand->links->main ?? url('/')) . '/' . $page['slug'] }}"
                    class="mr-4 py-2 text-gray-200 border-t-4 border-transparent hover:text-primary hover:border-primary">
                     {{$page['title']}}
                 </a>
@@ -75,7 +75,7 @@
             @endauth
 
             @guest
-                <a href="{{ $brand->contacts->userarea ?? '' }}" class="my-4 bg-secondary text-white px-4 py-2 rounded">Accedi
+                <a href="{{ Illuminate\Support\Facades\Route::has('login')  ? route('login') : $brand->links->account . '/login' }}" class="my-4 bg-secondary text-white px-4 py-2 rounded">Accedi
                     o Iscriviti</a>
             @endguest
         </div>

@@ -1,4 +1,4 @@
-<a href="{{ url('dashboard') }}" class="flex flex-col space-y-2 {{ $mode === 'dark' ? 'text-white' : 'text-primary' }} text-xs sm:text-sm">
+<a href="{{ $brand->links->account . '/dashboard' }}" class="flex flex-col space-y-2 {{ $mode === 'dark' ? 'text-white' : 'text-primary' }} text-xs sm:text-sm">
     <div class="flex space-x-2 items-center">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8  ">
             <path d="M4.5 3.75a3 3 0 0 0-3 3v.75h21v-.75a3 3 0 0 0-3-3h-15Z" />
