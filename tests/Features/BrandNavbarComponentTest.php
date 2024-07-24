@@ -108,7 +108,6 @@ it('will not include marketplace link if missing', function () {
     $brand = app('tenant');
     $brand->links->marketplace = null;
 
-    config()->set('multitenancy-utils-laravel.tenant_key', Tenants::IVR_KEY);
     Auth::login(new User);
 
     $user = new UserData(
