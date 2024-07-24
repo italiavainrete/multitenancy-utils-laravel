@@ -21,7 +21,7 @@ return [
     'force_static_tenant' => env('TENANT_FORCE_STATIC', false),
 
     'dev_mode' => [
-        'force_localhost_links' => env('TENANT_DEV_MODE', true),
+        'force_localhost_links' => env('TENANT_DEV_MODE', false),
         'links' => [
             'main' => env('TENANT_DEV_LINK_MAIN', "http://localhost:7000"),
             'account' => env('TENANT_DEV_LINK_ACCOUNT', "http://localhost"),
