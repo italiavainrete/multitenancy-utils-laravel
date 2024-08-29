@@ -25,6 +25,9 @@ class ShopData extends Data
         public ?string   $zipCode,
         public ?string   $website,
         public ?string   $facebook,
+        public ?string   $instagram,
+        public ?string   $twitter,
+        public ?string   $youtube,
     )
     {
     }
