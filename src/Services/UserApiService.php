@@ -16,7 +16,9 @@ class UserApiService implements RetrievesUserDataContract
             ->get("/api/loyalty/card");
 
         $user = json_decode($profile_response->body())->data;
-        $card = json_decode($card_data_response->body())->data;
+        if (!$card_data_response->failed()) {
+            $card = json_decode($card_data_response->body())->data;
+        }
         $name = $user->customer->firstname . ' ' . $user->customer->lastname;
 
         return new UserData(
@@ -25,7 +27,7 @@ class UserApiService implements RetrievesUserDataContract
             email: $user->email,
             avatar: $user->avatar ?? 'https://api.dicebear.com/9.x/initials/svg?seed=' . $name,
             cardNumber: $user->loyalty_profile->card_number,
-            cardBalance: $card->balance->balance,
+            cardBalance: isset($card) ? $card->balance->balance : 'N/A',
         );
     }
 
