@@ -26,7 +26,7 @@ class UserApiService implements RetrievesUserDataContract
             name: $name,
             email: $user->email,
             avatar: $user->avatar ?? 'https://api.dicebear.com/9.x/initials/svg?seed=' . $name,
-            cardNumber: $user->loyalty_profile->card_number,
+            cardNumber: !is_array($user->loyalty_profile) ? $user->loyalty_profile->card_number : 'N/A',
             cardBalance: isset($card) ? $card->balance->balance : 'N/A',
         );
     }
