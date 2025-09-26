@@ -24,7 +24,7 @@ return [
         'force_localhost_links' => env('TENANT_DEV_MODE', false),
         'links' => [
             'main' => env('TENANT_DEV_LINK_MAIN', "http://localhost:7000"),
-            'account' => env('TENANT_DEV_LINK_ACCOUNT', "http://localhost"),
+            'account' => env('TENANT_DEV_LINK_ACCOUNT', "http://localhost:9000"),
             'marketplace' => env('TENANT_DEV_LINK_MARKETPLACE', "http://localhost:8000"),
         ],
     ]
