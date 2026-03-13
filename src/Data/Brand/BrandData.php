@@ -67,6 +67,6 @@ class BrandData extends Data
 
     public function crossNetworkLoginAllowed(string $tenantKey): bool
     {
-        return array_key_exists($tenantKey, $this->domains);
+        return in_array($tenantKey, $this->allowed_tenants);
     }
 }
