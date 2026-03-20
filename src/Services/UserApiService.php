@@ -15,18 +15,24 @@ class UserApiService implements RetrievesUserDataContract
         $card_data_response = $this->prepareRequest($authToken)
             ->get("/api/loyalty/card");
 
-        $user = json_decode($profile_response->body())->data;
-        if (!$card_data_response->failed()) {
-            $card = json_decode($card_data_response->body())->data;
+        if (!$profile_response->failed()) {
+            $user_response_data = json_decode($profile_response->body());
+            $user = property_exists($user_response_data, 'data') ? $user_response_data->data : null;
         }
-        $name = $user->customer->firstname . ' ' . $user->customer->lastname;
+
+        if (!$card_data_response->failed()) {
+            $card_response_data = json_decode($card_data_response->body());
+            $card = property_exists($card_response_data, 'data') ? $card_response_data->data : null;
+        }
+
+        $name = $user ? $user->customer->firstname . ' ' . $user->customer->lastname : 'Sconosciuto';
 
         return new UserData(
-            id: $user->id,
+            id: $user->id ?? '',
             name: $name,
-            email: $user->email,
+            email: $user->email ?? '',
             avatar: $user->avatar ?? 'https://api.dicebear.com/9.x/initials/svg?seed=' . $name,
-            cardNumber: !is_array($user->loyalty_profile) ? $user->loyalty_profile->card_number : 'N/A',
+            cardNumber: $user && !is_array($user->loyalty_profile) ? $user->loyalty_profile->card_number : 'N/A',
             cardBalance: isset($card) ? $card->balance->balance : 'N/A',
         );
     }
