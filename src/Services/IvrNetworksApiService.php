@@ -80,7 +80,7 @@ class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTena
                 $tenant_data = json_decode($api_response->body())->data;
                 $tenant_data->source = BrandDataSource::SYSTEM;
                 return BrandData::from($tenant_data);
-            } catch (\Exception $exception)
+            } catch (\Throwable $exception)
             {
                 return BrandData::from(StaticTenantData::getBrand());
             }
@@ -95,7 +95,7 @@ class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTena
                 $tenant_data = json_decode($api_response->body())->data;
                 $tenant_data->source = BrandDataSource::DOMAIN;
                 return BrandData::from($tenant_data);
-            } catch (\Exception $exception)
+            } catch (\Throwable $exception)
             {
                 return null;
             }
