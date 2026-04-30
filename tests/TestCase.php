@@ -1,10 +1,10 @@
 <?php
 
-namespace IVR\MultiTenancyUtils\Tests;
+namespace IVR\Sdk\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use IVR\Sdk\IvrSdkServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
-use IVR\MultiTenancyUtils\MultiTenancyUtilsServiceProvider;
 use Spatie\LaravelData\LaravelDataServiceProvider;
 
 class TestCase extends Orchestra
@@ -14,14 +14,14 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'IVR\\MultiTenancyUtils\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName) => 'IVR\\Sdk\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 
     protected function getPackageProviders($app)
     {
         return [
-            MultiTenancyUtilsServiceProvider::class,
+            IvrSdkServiceProvider::class,
             LaravelDataServiceProvider::class,
         ];
     }
@@ -29,10 +29,5 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
-
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_multitenancy-utils-laravel_table.php.stub';
-        $migration->up();
-        */
     }
 }

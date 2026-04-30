@@ -1,20 +1,17 @@
 <?php
 
-namespace IVR\MultiTenancyUtils\Data;
+namespace IVR\Sdk\Data;
 
 use Spatie\LaravelData\Data;
 
 class UserData extends Data
 {
-
     public function __construct(
         public string $id,
         public string $name,
         public string $email,
         public string $avatar,
         public string $cardNumber,
-        public string $cardBalance
-    )
-    {
-    }
+        public string $cardBalance,
+    ) {}
 }

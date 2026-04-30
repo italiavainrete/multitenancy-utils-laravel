@@ -1,5 +1,5 @@
 <?php
 
-use IVR\MultiTenancyUtils\Tests\TestCase;
+use IVR\Sdk\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

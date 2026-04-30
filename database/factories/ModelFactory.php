@@ -1,6 +1,6 @@
 <?php
 
-namespace IVR\MultiTenancyUtils\Database\Factories;
+namespace IVR\Sdk\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 

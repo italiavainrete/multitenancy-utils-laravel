@@ -1,34 +1,31 @@
 <?php
 
-namespace IVR\MultiTenancyUtils\Data;
+namespace IVR\Sdk\Data;
 
 use Spatie\LaravelData\Data;
 
 class ShopData extends Data
 {
     public function __construct(
-        public string   $externalId,
-        public string   $name,
-        public string   $shop_slug,
-        public string   $category,
-        public ?string   $category_key,
-        public ?int      $rating,
-        public ?string   $cashback,
-        public ?string   $image,
-        public ?string   $address,
-        public ?string   $city,
-        public ?string   $meta,
-        public ?float    $lat,
-        public ?float    $long,
-        public ?string   $openingHours,
-        public ?string   $description,
-        public ?string   $zipCode,
-        public ?string   $website,
-        public ?string   $facebook,
-        public ?string   $instagram,
-        public ?string   $twitter,
-        public ?string   $youtube,
-    )
-    {
-    }
+        public string $externalId,
+        public string $name,
+        public string $shop_slug,
+        public string $category,
+        public ?string $category_key = null,
+        public ?int $rating = null,
+        public ?string $cashback = null,
+        public ?string $image = null,
+        public ?string $address = null,
+        public ?string $city = null,
+        public ?float $lat = null,
+        public ?float $long = null,
+        public ?string $openingHours = null,
+        public ?string $description = null,
+        public ?string $zipCode = null,
+        public ?string $website = null,
+        public ?string $facebook = null,
+        public ?string $instagram = null,
+        public ?string $twitter = null,
+        public ?string $youtube = null,
+    ) {}
 }
