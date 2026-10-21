@@ -14,12 +14,18 @@ class FaviconData extends Data
         public ?string $osx_mask_icon_color,
         /** Optional per-brand base URL of the icon files; when empty, the tenant CDN assets path is used. */
         public ?string $icons_base_url = null,
+        /** Optional map file name => absolute URL; takes precedence over icons_base_url. */
+        public ?array $icons = null,
     )
     {
     }
 
     private function icon(string $fileName): string
     {
+        if (filled($this->icons[$fileName] ?? null)) {
+            return $this->icons[$fileName];
+        }
+
         if (filled($this->icons_base_url)) {
             return rtrim($this->icons_base_url, '/') . '/' . ltrim($fileName, '/');
         }

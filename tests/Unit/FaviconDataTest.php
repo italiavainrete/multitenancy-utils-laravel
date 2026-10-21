@@ -145,3 +145,25 @@ it('falls back to tenant assets when icons_base_url is empty or missing from pay
     $legacy = FaviconData::from(['android_theme_color' => '#fff', 'ms_tile_color' => '#fff', 'osx_mask_icon_color' => '#fff']);
     expect($legacy->icons_base_url)->toBeNull();
 });
+
+it('uses per-file icons map, with partial coverage falling back to base url then tenant assets', function () {
+    config()->set('multitenancy-utils-laravel.tenant_key', Tenants::IVR_KEY);
+    $cdn = config('multitenancy-utils-laravel.cdn');
+    $brandData = BrandData::from(\IVR\MultiTenancyUtils\Support\StaticTenantData::getBrand());
+    $colors = ['android_theme_color' => '#fff', 'ms_tile_color' => '#fff', 'osx_mask_icon_color' => '#fff'];
+
+    $full = FaviconData::from($colors + ['icons' => ['favicon.ico' => 'https://media.example.com/1/f.ico']]);
+    $tags = $full->renderFaviconMetaTags($brandData);
+    expect($tags)->toContain('https://media.example.com/1/f.ico')
+        ->toContain($cdn.'/'.$brandData->key.'/assets/apple-touch-icon.png');
+
+    $mixed = FaviconData::from($colors + [
+        'icons_base_url' => 'https://base.example.com/i',
+        'icons' => ['apple-touch-icon.png' => 'https://media.example.com/2/a.png'],
+    ]);
+    $tags = $mixed->renderFaviconMetaTags($brandData);
+    expect($tags)->toContain('https://media.example.com/2/a.png')
+        ->toContain('https://base.example.com/i/favicon.ico')
+        ->not->toContain('/assets/');
+    expect($mixed->renderWebManifest($brandData)['icons'][0]['src'])->toBe('https://base.example.com/i/android-chrome-192x192.png');
+});
