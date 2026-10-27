@@ -15,15 +15,18 @@ class FaviconData extends Data
         /** Optional per-brand base URL of the icon files; when empty, the tenant CDN assets path is used. */
         public ?string $icons_base_url = null,
         /** Optional map file name => absolute URL; takes precedence over icons_base_url. */
-        public ?array $icons = null,
+        public array|\stdClass|null $icons = null,
     )
     {
     }
 
     private function icon(string $fileName): string
     {
-        if (filled($this->icons[$fileName] ?? null)) {
-            return $this->icons[$fileName];
+        // The API services json_decode() into objects, so the map may arrive as stdClass.
+        $icons = (array) $this->icons;
+
+        if (filled($icons[$fileName] ?? null)) {
+            return $icons[$fileName];
         }
 
         if (filled($this->icons_base_url)) {
