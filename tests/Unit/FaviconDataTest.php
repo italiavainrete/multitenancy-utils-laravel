@@ -167,3 +167,20 @@ it('uses per-file icons map, with partial coverage falling back to base url then
         ->not->toContain('/assets/');
     expect($mixed->renderWebManifest($brandData)['icons'][0]['src'])->toBe('https://base.example.com/i/android-chrome-192x192.png');
 });
+
+it('accepts the icons map decoded as an object, as the API services deliver it', function () {
+    $payload = json_decode(json_encode([
+        'android_theme_color' => '#dc651f',
+        'ms_tile_color' => '#dc651f',
+        'osx_mask_icon_color' => '#dc651f',
+        'icons' => ['favicon-32x32.png' => 'https://media.example.test/14/favicon-32x32.png'],
+    ]));
+
+    $faviconData = FaviconData::from($payload);
+
+    config()->set('multitenancy-utils-laravel.tenant_key', Tenants::IVR_KEY);
+    $brandData = BrandData::from(\IVR\MultiTenancyUtils\Support\StaticTenantData::getBrand());
+
+    expect($faviconData->renderFaviconMetaTags($brandData))
+        ->toContain('https://media.example.test/14/favicon-32x32.png');
+});
