@@ -55,15 +55,12 @@ class EnsureValidUserToken
         ]);
 
         if ($user instanceof Model) {
-            try {
-                $user->forceFill([$attribute => null]);
-                if ($user->getRememberTokenName()) {
-                    $user->setRememberToken(null);
-                }
-                $user->saveQuietly();
-            } catch (Throwable $saveException) {
-                report($saveException);
+            // Saved separately: if the token column is not nullable the remember
+            // token must still be cleared, so a stolen remember cookie stops working.
+            if ($user->getRememberTokenName()) {
+                $this->clearAttribute($user, $user->getRememberTokenName());
             }
+            $this->clearAttribute($user, $attribute);
         }
 
         if (method_exists($guard, 'logout')) {
@@ -73,6 +70,16 @@ class EnsureValidUserToken
         if ($request->hasSession()) {
             $request->session()->invalidate();
             $request->session()->regenerateToken();
+        }
+    }
+
+    private function clearAttribute(Model $user, string $attribute): void
+    {
+        try {
+            $user->forceFill([$attribute => null])->saveQuietly();
+        } catch (Throwable $exception) {
+            $user->forceFill([$attribute => $user->getOriginal($attribute)]);
+            report($exception);
         }
     }
 

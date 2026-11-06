@@ -118,6 +118,24 @@ it('logs out a user whose token is rejected and serves the page as guest', funct
         ->and($user->fresh()->remember_token)->toBeNull();
 });
 
+it('clears the remember token even if the token column is not nullable', function () {
+    Schema::drop('users');
+    Schema::create('users', function (Blueprint $table) {
+        $table->id();
+        $table->string('email');
+        $table->text('oauth_token');
+        $table->rememberToken();
+        $table->timestamps();
+    });
+    Http::fake(['*/api/profile' => Http::response('', 401)]);
+    $user = oauthUser();
+
+    $this->actingAs($user)->get('/probe')->assertOk()->assertSee('guest');
+
+    $this->assertGuest();
+    expect($user->fresh()->remember_token)->toBeNull();
+});
+
 it('logs out a user without a token', function () {
     Http::fake();
 
