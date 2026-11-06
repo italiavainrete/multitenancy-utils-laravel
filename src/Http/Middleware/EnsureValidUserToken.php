@@ -3,8 +3,10 @@
 namespace IVR\MultiTenancyUtils\Http\Middleware;
 
 use Closure;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +22,9 @@ use Throwable;
  * Disconnects the local user when the identity provider no longer accepts
  * the OAuth token stored on it (revoked token, rotated keys, ...).
  *
- * Must run after StartSession: append it to the `web` group.
+ * Must run after StartSession: append it to the `web` group. On routes
+ * protected by `auth` it throws AuthenticationException after the logout,
+ * so guests get the usual redirect to login (or 401 for JSON).
  */
 class EnsureValidUserToken
 {
@@ -105,6 +109,29 @@ class EnsureValidUserToken
             return redirect()->route($route);
         }
 
+        // `auth` is higher in the middleware priority, so on protected routes it
+        // has already let the stale user through: fail the way it would for a guest.
+        if ($this->routeRequiresAuthentication($request)) {
+            throw new AuthenticationException('Unauthenticated.');
+        }
+
         return $next($request);
+    }
+
+    private function routeRequiresAuthentication(Request $request): bool
+    {
+        foreach ($request->route()?->gatherMiddleware() ?? [] as $middleware) {
+            if (! is_string($middleware)) {
+                continue;
+            }
+
+            $name = explode(':', $middleware, 2)[0];
+
+            if ($name === 'auth' || is_a($name, AuthenticatesRequests::class, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

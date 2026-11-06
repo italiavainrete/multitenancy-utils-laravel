@@ -27,6 +27,8 @@ beforeEach(function () {
 
     Route::middleware(['web', EnsureValidUserToken::class])
         ->get('/probe', fn () => Auth::check() ? 'auth' : 'guest');
+    Route::middleware(['web', EnsureValidUserToken::class, 'auth'])
+        ->get('/private', fn () => 'private');
     Route::get('/login', fn () => 'login page')->name('login');
 });
 
@@ -143,6 +145,15 @@ it('logs out a user without a token', function () {
 
     $this->assertGuest();
     Http::assertNothingSent();
+});
+
+it('sends the user to login on routes protected by auth', function () {
+    Http::fake(['*/api/profile' => Http::response('', 401)]);
+
+    $this->actingAs(oauthUser())->get('/private')->assertRedirect('/login');
+    $this->assertGuest();
+
+    $this->actingAs(oauthUser())->getJson('/private')->assertUnauthorized();
 });
 
 it('can redirect to the login route instead', function () {

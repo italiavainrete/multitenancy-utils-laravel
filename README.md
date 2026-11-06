@@ -135,15 +135,8 @@ The middleware is also aliased as `ivr.user-token`. By default the page is then 
 set `multitenancy-utils-laravel.user_token.on_invalid` to `redirect` to send the user to
 `user_token.redirect_route` (default `login`).
 
-Register it before `auth` in the priority list, otherwise `auth` (and any
-middleware after it) still sees the stale user on protected routes:
-
-```php
-$middleware->prependToPriorityList(
-    \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
-    \IVR\MultiTenancyUtils\Http\Middleware\EnsureValidUserToken::class,
-);
-```
+On routes protected by `auth` the middleware throws `AuthenticationException`
+after the logout, so the user gets the usual redirect to login (401 for JSON).
 
 `user_token.validation_ttl` (seconds, default 0) caches successful validations
 to avoid calling the user area on every request.
