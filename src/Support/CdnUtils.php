@@ -26,6 +26,18 @@ class CdnUtils
         return self::getShopsPath() . Str::start($fileName, '/');
     }
 
+    /**
+     * Asset URL under the CDN folder of an explicit tenant/brand key, instead of the
+     * deploy's configured tenant_key (needed by multi-tenant deploys serving many brands).
+     */
+    static function tenantAsset(string $tenantKey, string $fileName): string
+    {
+        return self::getCdnBaseUrl()
+            . Str::start(trim($tenantKey, '/'), '/')
+            . Str::start(self::ASSETS_PATH, '/')
+            . Str::start($fileName, '/');
+    }
+
     static function getCdnBaseUrl(): string
     {
         return config('multitenancy-utils-laravel.cdn');

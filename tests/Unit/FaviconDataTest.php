@@ -184,3 +184,88 @@ it('accepts the icons map decoded as an object, as the API services deliver it',
     expect($faviconData->renderFaviconMetaTags($brandData))
         ->toContain('https://media.example.test/14/favicon-32x32.png');
 });
+
+function otherBrand(array $favicon = []): BrandData
+{
+    $data = \IVR\MultiTenancyUtils\Support\StaticTenantData::getBrand();
+    $data['key'] = 'velletri-va-in-rete';
+    $data['name'] = 'Velletri Va In Rete';
+    $data['favicon_data'] = $favicon + ['android_theme_color' => '#fff', 'ms_tile_color' => '#fff', 'osx_mask_icon_color' => '#fff'];
+
+    return BrandData::from($data);
+}
+
+it('falls back to the CDN assets of the rendered brand, not of the configured tenant', function () {
+    config()->set('multitenancy-utils-laravel.tenant_key', Tenants::IVR_KEY);
+    $cdn = config('multitenancy-utils-laravel.cdn');
+    $brand = otherBrand();
+    $base = $cdn.'/velletri-va-in-rete/assets';
+
+    expect($brand->renderFaviconMeta())
+        ->toContain($base.'/favicon.ico')
+        ->toContain($base.'/favicon-32x32.png')
+        ->toContain($base.'/apple-touch-icon.png')
+        ->toContain($base.'/safari-pinned-tab.svg')
+        ->not->toContain('/'.Tenants::IVR_KEY.'/');
+    expect($brand->renderBrowserConfigXml())->toContain($base.'/mstile-150x150.png');
+    expect($brand->renderWebManifest()['icons'][1]['src'])->toBe($base.'/android-chrome-512x512.png');
+});
+
+it('resolves icons map > icons_base_url > brand CDN for a brand other than the configured tenant', function () {
+    config()->set('multitenancy-utils-laravel.tenant_key', Tenants::IVR_KEY);
+    $cdn = config('multitenancy-utils-laravel.cdn');
+
+    $brand = otherBrand([
+        'icons_base_url' => 'https://base.example.com/v/',
+        'icons' => ['favicon.ico' => 'https://media.example.com/9/f.ico'],
+    ]);
+    expect($brand->renderFaviconMeta())
+        ->toContain('href="https://media.example.com/9/f.ico"')
+        ->toContain('https://base.example.com/v/favicon-32x32.png')
+        ->not->toContain($cdn);
+
+    $brand = otherBrand(['icons' => ['favicon.ico' => 'https://media.example.com/9/f.ico']]);
+    expect($brand->renderFaviconMeta())
+        ->toContain('href="https://media.example.com/9/f.ico"')
+        ->toContain($cdn.'/velletri-va-in-rete/assets/favicon-32x32.png')
+        ->not->toContain('/'.Tenants::IVR_KEY.'/');
+});
+
+it('emits the SVG favicon before the PNGs only when the brand declares it', function () {
+    config()->set('multitenancy-utils-laravel.tenant_key', Tenants::IVR_KEY);
+    $cdn = config('multitenancy-utils-laravel.cdn');
+
+    expect(otherBrand()->renderFaviconMeta())->not->toContain('image/svg+xml');
+
+    $tags = otherBrand(['icons' => ['favicon.svg' => 'https://media.example.com/9/f.svg']])->renderFaviconMeta();
+    expect($tags)->toContain('<link rel="icon" type="image/svg+xml" href="https://media.example.com/9/f.svg">');
+    expect(strpos($tags, 'image/svg+xml'))->toBeLessThan(strpos($tags, 'image/png'));
+
+    $tags = otherBrand(['has_svg_icon' => true])->renderFaviconMeta();
+    expect($tags)->toContain('<link rel="icon" type="image/svg+xml" href="'.$cdn.'/velletri-va-in-rete/assets/favicon.svg">');
+});
+
+it('escapes brand name, colors and urls in the rendered markup and builds a valid manifest', function () {
+    $data = \IVR\MultiTenancyUtils\Support\StaticTenantData::getBrand();
+    $data['name'] = 'Bar "Da Mario" <b>&</b>';
+    $data['favicon_data'] = [
+        'android_theme_color' => '#fff"><script>',
+        'ms_tile_color' => '#fff',
+        'osx_mask_icon_color' => '#fff',
+        'icons' => ['favicon.ico' => 'https://x.test/f.ico?a=1&b="2"'],
+    ];
+    $brand = BrandData::from($data);
+
+    $tags = $brand->renderFaviconMeta();
+    expect($tags)
+        ->toContain('content="Bar &quot;Da Mario&quot; &lt;b&gt;&amp;&lt;/b&gt;"')
+        ->toContain('content="#fff&quot;&gt;&lt;script&gt;"')
+        ->toContain('href="https://x.test/f.ico?a=1&amp;b=&quot;2&quot;"')
+        ->not->toContain('<script>');
+
+    expect($brand->renderBrowserConfigXml())->not->toContain('<script>');
+
+    $manifest = $brand->renderWebManifest();
+    expect($manifest['name'])->toBe('Bar "Da Mario" <b>&</b>')
+        ->and($manifest['theme_color'])->toBe('#fff"><script>');
+});
