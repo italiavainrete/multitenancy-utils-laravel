@@ -134,3 +134,16 @@ Append the middleware to the `web` group so a user with a dead token is logged o
 The middleware is also aliased as `ivr.user-token`. By default the page is then served as a guest;
 set `multitenancy-utils-laravel.user_token.on_invalid` to `redirect` to send the user to
 `user_token.redirect_route` (default `login`).
+
+Register it before `auth` in the priority list, otherwise `auth` (and any
+middleware after it) still sees the stale user on protected routes:
+
+```php
+$middleware->prependToPriorityList(
+    \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
+    \IVR\MultiTenancyUtils\Http\Middleware\EnsureValidUserToken::class,
+);
+```
+
+`user_token.validation_ttl` (seconds, default 0) caches successful validations
+to avoid calling the user area on every request.

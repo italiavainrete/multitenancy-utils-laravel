@@ -161,6 +161,21 @@ it('keeps the session when the identity provider is down', function () {
     expect($user->fresh()->oauth_token)->toBe('good-token');
 });
 
+it('caches successful validations when a ttl is configured', function () {
+    config()->set('multitenancy-utils-laravel.user_token.validation_ttl', 60);
+    Http::fake([
+        '*/api/profile' => Http::response(profilePayload()),
+        '*/api/loyalty/card' => Http::response(['data' => ['balance' => ['balance' => 1]]]),
+    ]);
+    $user = oauthUser();
+
+    $this->actingAs($user)->get('/probe')->assertSee('auth');
+    $this->app->forgetScopedInstances();
+    $this->actingAs($user)->get('/probe')->assertSee('auth');
+
+    Http::assertSentCount(2);
+});
+
 it('registers the middleware alias', function () {
     expect(app('router')->getMiddleware())->toHaveKey('ivr.user-token', EnsureValidUserToken::class);
 });

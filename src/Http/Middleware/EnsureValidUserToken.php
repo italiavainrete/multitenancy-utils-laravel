@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use IVR\MultiTenancyUtils\Contracts\RetrievesUserDataContract;
@@ -36,8 +37,20 @@ class EnsureValidUserToken
 
         $attribute = config('multitenancy-utils-laravel.user_token.attribute', 'oauth_token');
 
+        $token = (string) data_get($user, $attribute, '');
+        $ttl = (int) config('multitenancy-utils-laravel.user_token.validation_ttl', 0);
+
         try {
-            $this->userData->getUserData((string) data_get($user, $attribute, ''));
+            if ($ttl > 0 && $token !== '') {
+                // Only successful validations are cached: a rejection throws.
+                Cache::remember('ivr-user-token:'.hash('sha256', $token), $ttl, function () use ($token) {
+                    $this->userData->getUserData($token);
+
+                    return true;
+                });
+            } else {
+                $this->userData->getUserData($token);
+            }
         } catch (InvalidUserTokenException $exception) {
             $this->disconnect($request, $guard, $user, $attribute, $exception);
 
