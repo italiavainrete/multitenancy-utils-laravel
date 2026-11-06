@@ -113,3 +113,24 @@ composer test
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+## Invalid OAuth tokens
+
+`UserApiService::getUserData()` throws `IVR\MultiTenancyUtils\Exceptions\InvalidUserTokenException`
+when the user area rejects the token (401/403, empty or malformed profile, missing token).
+If the user area is down (5xx, 429, timeout) it returns a placeholder user and keeps the session.
+Lookups are memoized for the current request.
+
+Append the middleware to the `web` group so a user with a dead token is logged out
+(`oauth_token` and `remember_token` cleared, session invalidated) instead of getting a 500:
+
+```php
+// bootstrap/app.php
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->web(append: \IVR\MultiTenancyUtils\Http\Middleware\EnsureValidUserToken::class);
+})
+```
+
+The middleware is also aliased as `ivr.user-token`. By default the page is then served as a guest;
+set `multitenancy-utils-laravel.user_token.on_invalid` to `redirect` to send the user to
+`user_token.redirect_route` (default `login`).

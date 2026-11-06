@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Blade;
 use IVR\MultiTenancyUtils\Contracts\RetrievesShopsListContract;
 use IVR\MultiTenancyUtils\Contracts\RetrievesTenantBrandContract;
 use IVR\MultiTenancyUtils\Contracts\RetrievesUserDataContract;
+use IVR\MultiTenancyUtils\Http\Middleware\EnsureValidUserToken;
 use IVR\MultiTenancyUtils\Services\IvrNetworksApiService;
 use IVR\MultiTenancyUtils\Services\UserApiService;
 use IVR\MultiTenancyUtils\Views\Components\BrandFavicons;
@@ -41,11 +42,16 @@ class MultiTenancyUtilsServiceProvider extends PackageServiceProvider
 
     }
 
+    public function packageBooted(): void
+    {
+        $this->app['router']->aliasMiddleware('ivr.user-token', EnsureValidUserToken::class);
+    }
+
     public function packageRegistered()
     {
         $this->app->bind(RetrievesTenantBrandContract::class, IvrNetworksApiService::class);
         $this->app->bind(RetrievesShopsListContract::class, IvrNetworksApiService::class);
-        $this->app->bind(RetrievesUserDataContract::class, UserApiService::class);
+        $this->app->scoped(RetrievesUserDataContract::class, UserApiService::class);
 
         $this->app->singleton(
             'tenant',
