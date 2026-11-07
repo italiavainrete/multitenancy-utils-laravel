@@ -18,6 +18,21 @@ return [
         'enable' => env('TENANT_DOMAIN_DISCOVERY', false),
         'fallback_tenant' => \IVR\MultiTenancyUtils\Constants\Tenants::DEFAULT_TENANT_KEY,
     ],
+    /*
+     * OAuth token stored on the local user. When the identity provider rejects
+     * it, the EnsureValidUserToken middleware logs the user out and either
+     * serves the page as a guest ('anonymous') or redirects ('redirect').
+     */
+    'user_token' => [
+        'attribute' => 'oauth_token',
+        'guard' => null,
+        'on_invalid' => env('USER_TOKEN_ON_INVALID', 'anonymous'),
+        'redirect_route' => env('USER_TOKEN_REDIRECT_ROUTE', 'login'),
+        'timeout' => env('USER_TOKEN_TIMEOUT', 10),
+        // Seconds a successful validation is cached (0 = check on every request).
+        'validation_ttl' => env('USER_TOKEN_VALIDATION_TTL', 0),
+    ],
+
     'force_static_tenant' => env('TENANT_FORCE_STATIC', false),
 
     'dev_mode' => [
