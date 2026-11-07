@@ -34,14 +34,17 @@ class FaviconData extends Data
     private function icon(string $fileName, ?string $brandKey = null): string
     {
         // The API services json_decode() into objects, so the map may arrive as stdClass.
-        $icons = (array) $this->icons;
+        // Read with ?? : objects unserialized from a cache written by an older version of this
+        // class lack the newer promoted properties, which stay uninitialized (see hasSvgIcon()).
+        $icons = (array) ($this->icons ?? null);
+        $iconsBaseUrl = $this->icons_base_url ?? null;
 
         if (filled($icons[$fileName] ?? null)) {
             return $icons[$fileName];
         }
 
-        if (filled($this->icons_base_url)) {
-            return rtrim($this->icons_base_url, '/') . '/' . ltrim($fileName, '/');
+        if (filled($iconsBaseUrl)) {
+            return rtrim($iconsBaseUrl, '/') . '/' . ltrim($fileName, '/');
         }
 
         if (filled($brandKey)) {
@@ -57,7 +60,10 @@ class FaviconData extends Data
      */
     public function hasSvgIcon(): bool
     {
-        return $this->has_svg_icon || filled(((array) $this->icons)[self::SVG_ICON] ?? null);
+        // BrandData is cached serialized (IvrNetworksApiService, brand:<key>): after an upgrade a cached
+        // object has no has_svg_icon/icons, and reading an uninitialized typed property is a fatal Error
+        // (500 on the portals on 7/11/2026). ?? tolerates it.
+        return ($this->has_svg_icon ?? false) || filled(((array) ($this->icons ?? null))[self::SVG_ICON] ?? null);
     }
 
     public function renderBrowserConfigXml(BrandData $brandData): string
