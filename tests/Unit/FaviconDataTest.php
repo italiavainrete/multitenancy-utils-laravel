@@ -269,3 +269,27 @@ it('escapes brand name, colors and urls in the rendered markup and builds a vali
     expect($manifest['name'])->toBe('Bar "Da Mario" <b>&</b>')
         ->and($manifest['theme_color'])->toBe('#fff"><script>');
 });
+
+it('renders a FaviconData unserialized from a cache written before the newer properties existed', function () {
+    // BrandData is cached serialized (brand:<key>). An object written by an older release has no
+    // icons / icons_base_url / has_svg_icon: after unserialize they stay uninitialized, and reading
+    // them used to throw a fatal Error (500 on the portals, 7/11/2026).
+    $cdn = config('multitenancy-utils-laravel.cdn');
+    $legacy = (new ReflectionClass(FaviconData::class))->newInstanceWithoutConstructor();
+    foreach (['android_theme_color' => '#ffffff', 'ms_tile_color' => '#00aba9', 'osx_mask_icon_color' => '#1f2a6b'] as $prop => $value) {
+        (new ReflectionProperty(FaviconData::class, $prop))->setValue($legacy, $value);
+    }
+    $cached = unserialize(serialize($legacy));
+
+    config()->set('multitenancy-utils-laravel.tenant_key', Tenants::IVR_KEY);
+    $brandData = BrandData::from(\IVR\MultiTenancyUtils\Support\StaticTenantData::getBrand());
+
+    expect($cached->hasSvgIcon())->toBeFalse();
+    $html = $cached->renderFaviconMetaTags($brandData);
+    expect($html)
+        ->toContain($cdn.'/'.$brandData->key.'/assets/favicon-32x32.png')
+        ->not->toContain('image/svg+xml');
+    expect($cached->renderWebManifest($brandData)['icons'][0]['src'])
+        ->toBe($cdn.'/'.$brandData->key.'/assets/android-chrome-192x192.png');
+    expect($cached->renderBrowserConfigXml($brandData))->toContain('mstile-150x150.png');
+});
