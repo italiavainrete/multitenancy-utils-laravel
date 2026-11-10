@@ -10,6 +10,7 @@ use IVR\MultiTenancyUtils\Contracts\RetrievesShopsListContract;
 use IVR\MultiTenancyUtils\Contracts\RetrievesTenantBrandContract;
 use IVR\MultiTenancyUtils\Data\Brand\BrandData;
 use IVR\MultiTenancyUtils\Data\ShopData;
+use IVR\MultiTenancyUtils\Support\DataCacheKey;
 use IVR\MultiTenancyUtils\Support\StaticTenantData;
 
 beforeEach(function () {
@@ -31,7 +32,7 @@ it('retrieves tenant shops and caches the result', function () {
     expect($shops)->toBeCollection()
         ->and($shops->first())->toBeInstanceOf(ShopData::class)
         ->and($shops->first()->shop_slug)->toBe('ceramiche-di-deruta')
-        ->and(Cache::has("shops:".Tenants::IVR_KEY))->toBeTrue();
+        ->and(Cache::has(DataCacheKey::for('shops', ShopData::class, Tenants::IVR_KEY)))->toBeTrue();
 
     // Verifica che i dati siano stati memorizzati nella cache
 });
@@ -50,7 +51,7 @@ it('retrieves tenant brand and caches the result', function () {
 
     expect($brand)->toBeInstanceOf(BrandData::class)
         ->and($brand->name)->toBe(Tenants::IVR_NAME)
-        ->and(Cache::has("brand:$tenantKey"))->toBeTrue()
+        ->and(Cache::has(DataCacheKey::for('brand', BrandData::class, $tenantKey)))->toBeTrue()
         ->and($brand->source)->toEqual(BrandDataSource::SYSTEM);
 });
 
@@ -73,7 +74,7 @@ it('retrieves tenant brand from domain name', function () {
 
     expect($brand)->toBeInstanceOf(BrandData::class)
         ->and($brand->name)->toBe('Velletri va In Rete')
-        ->and(Cache::has("brand:$test_domain"))->toBeTrue()
+        ->and(Cache::has(DataCacheKey::for('brand', BrandData::class, $test_domain)))->toBeTrue()
         ->and($brand->source)->toEqual(BrandDataSource::DOMAIN);
 });
 
@@ -86,6 +87,6 @@ it('will serve static tenant brand config options is set', function () {
 
     expect($brand)->toBeInstanceOf(BrandData::class)
         ->and($brand->name)->toBe(Tenants::IVR_NAME)
-        ->and(Cache::has("brand:" .Tenants::IVR_KEY))->toBeFalse()
+        ->and(Cache::has(DataCacheKey::for('brand', BrandData::class, Tenants::IVR_KEY)))->toBeFalse()
         ->and($brand->source)->toEqual(BrandDataSource::DEFAULT);
 });

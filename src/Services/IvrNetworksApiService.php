@@ -11,6 +11,7 @@ use IVR\MultiTenancyUtils\Contracts\RetrievesShopsListContract;
 use IVR\MultiTenancyUtils\Contracts\RetrievesTenantBrandContract;
 use IVR\MultiTenancyUtils\Data\Brand\BrandData;
 use IVR\MultiTenancyUtils\Data\ShopData;
+use IVR\MultiTenancyUtils\Support\DataCacheKey;
 use IVR\MultiTenancyUtils\Support\StaticTenantData;
 
 class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTenantBrandContract
@@ -27,7 +28,7 @@ class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTena
     public function getTenantShops(): Collection
     {
         $tenantKey = app('tenant')->key;
-        return Cache::remember("shops:$tenantKey", config('multitenancy-utils-laravel.cache.ttl'), function () use ($tenantKey) {
+        return Cache::remember(DataCacheKey::for('shops', ShopData::class, $tenantKey), config('multitenancy-utils-laravel.cache.ttl'), function () use ($tenantKey) {
             $shops = collect();
 
             $api_response = Http::get("{$this->apiUrl}/api/networks/$tenantKey/shops");
@@ -74,7 +75,7 @@ class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTena
 
     public function getTenantBrandByKey(string $tenantKey): BrandData
     {
-        return Cache::remember("brand:$tenantKey", config('multitenancy-utils-laravel.cache.ttl'), function () use ($tenantKey) {
+        return Cache::remember(DataCacheKey::for('brand', BrandData::class, $tenantKey), config('multitenancy-utils-laravel.cache.ttl'), function () use ($tenantKey) {
             try {
                 $api_response = Http::get("$this->apiUrl/api/networks/$tenantKey/brand");
                 $tenant_data = json_decode($api_response->body())->data;
@@ -89,7 +90,7 @@ class IvrNetworksApiService implements RetrievesShopsListContract, RetrievesTena
 
     public function getTenantBrandByDomain(string $domain): ?BrandData
     {
-        return Cache::remember("brand:$domain", config('multitenancy-utils-laravel.cache.ttl'), function () use ($domain) {
+        return Cache::remember(DataCacheKey::for('brand', BrandData::class, $domain), config('multitenancy-utils-laravel.cache.ttl'), function () use ($domain) {
             try {
                 $api_response = Http::get("$this->apiUrl/api/networks/brands/find", ['domain' => $domain]);
                 $tenant_data = json_decode($api_response->body())->data;
